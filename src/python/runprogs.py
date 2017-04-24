@@ -97,6 +97,7 @@ def color_graphs_greedy(ipath, opath, cfolder):
         coloredGraphCount+=1
     return coloredGraphCount
 
+
 def get_coloring_time(opath, graphColoringTime):
     '''
     get the coloring time for each graph
@@ -108,19 +109,19 @@ def get_coloring_time(opath, graphColoringTime):
             for rec in fin:
                 if ('Time spent' in rec):
                     try:
-                        graphColoringTime[file[:file.find('.')]] += float(rec.split()[2])
+                        graphColoringTime[file[:file.find('.')]].append(float(rec.split()[2]))
                     except:
-                        graphColoringTime[file[:file.find('.')]] = float(rec.split()[2])
+                        graphColoringTime[file[:file.find('.')]] = [float(rec.split()[2])]
                 else:
                     continue
 
     return graphColoringTime
 
-def get_color_count(opath, coloringMethod):
+
+def get_color_count(opath, coloringMethod, maxGraphColor):
     '''
     get the max color count that needed to color the graph
     '''
-    graphColorCount = {}
     filenames = next(os.walk(opath))[2]
     for file in filenames:
         foundLocation = 0
@@ -134,13 +135,19 @@ def get_color_count(opath, coloringMethod):
                         continue
                 else:
                     if (coloringMethod == 'random'):
-                        graphColorCount[file[:file.find('.')]] = int(rec.split()[4])
+                        try:
+                            maxGraphColor[file[:file.find('.')]].append(int(rec.split()[4]))
+                        except:
+                            maxGraphColor[file[:file.find('.')]] = [int(rec.split()[4])]
                     elif (coloringMethod == 'greedy'):
-                        graphColorCount[file[:file.find('.')]] = int(rec.split()[3])
+                        try:
+                            maxGraphColor[file[:file.find('.')]].append(int(rec.split()[3]))
+                        except:
+                            maxGraphColor[file[:file.find('.')]] = [int(rec.split()[3])]
                     else:
                         print ('Wrong coloring method')
                     break
-    return graphColorCount
+    return maxGraphColor
 
 
 
@@ -181,6 +188,7 @@ def main():
     else:
         maxIterations = VARIABLES.maxIterations
 
+    '''
     # generate random graphs
     graphCount = generate_graphs(numOfNodes, VARIABLES.ipath, VARIABLES.folder)
     print ('Generated ' + str(graphCount) + ' graphs')
@@ -188,33 +196,30 @@ def main():
     # delete those graphs that do not all connected nodes
     goodGraphCount = graphCount - remove_bad_graphs(VARIABLES.ipath)
     print ('Remaining ' + str(goodGraphCount) + ' graphs')
+    '''
 
     #color the nodes of the graphs and store them in a folder and then get the coloring time
     coloringTime = {}
     maxGraphColor = {}
     if (coloringMethod == 'random'):
         iter = 2
-        totalVal = 0
-        while (iter < maxIterations):
+        while (iter <= maxIterations):
             coloredGraphCount = color_graphs_random(VARIABLES.ipath, VARIABLES.opath, VARIABLES.cfolder, maxIterations)
             coloringTime = get_coloring_time(VARIABLES.opath, coloringTime)
             iter*=2
-            totalVal+=1
+            # find the max number of colors needed to color each graph
+            maxGraphColor = get_color_count(VARIABLES.opath, coloringMethod, maxGraphColor)
         print(str(coloredGraphCount) + ' graphs colored')
         #compute the average time
-        for k, v in coloringTime.items():
-            coloringTime[k] = v/totalVal
-
-        # find the max number of colors needed to color each graph
-        maxGraphColor = get_color_count(VARIABLES.opath, coloringMethod)
-
+        #for k, v in coloringTime.items():
+        #    coloringTime[k] = sum(v)/len(v)
     elif(coloringMethod == 'greedy'):
         coloredGraphCount = color_graphs_greedy(VARIABLES.ipath, VARIABLES.opath, VARIABLES.cfolder)
         print (str(coloredGraphCount) + ' graphs colored')
         # find coloring time
         coloringTime = get_coloring_time(VARIABLES.opath, coloringTime)
         # find the max number of colors needed to color each graph
-        maxGraphColor = get_color_count(VARIABLES.opath, coloringMethod)
+        maxGraphColor = get_color_count(VARIABLES.opath, coloringMethod, maxGraphColor)
 
     else:
         print ('Wrong coloring method!!!')
@@ -222,6 +227,11 @@ def main():
     print(coloringTime)
     print ('\nMax color: ')
     print (maxGraphColor)
+
+    '''
+    Read the dictionary created above and generate heatmap plots
+    '''
+
 
 if __name__ == '__main__':
     main()
