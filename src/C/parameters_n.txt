@@ -1,0 +1,9 @@
+inp /home/praveen/Documents/UNM/Sem_4/CS533/Project/graphs/node_100_edge_200
+int 1
+max 9
+tar 0
+cwt 10 10 10 10 10 10
+vwt 10 10 10 10
+rev 2
+tri 5
+see 10
