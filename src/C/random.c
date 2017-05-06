@@ -154,7 +154,7 @@ void printcolors()
 {
   int v; 
   for (v =1; v<= numnodes; v++) {
-    printf("%d %d\t", v, bestcoloring[v]); 
+    //printf("%d %d\t", v, bestcoloring[v]);
     if (v % 10 == 0) printf("\n"); 
   }
 }
@@ -168,9 +168,9 @@ void printgraph()
  
   for (src = 1; src <= numnodes; src++) {
     ex = edgex[src];
-    printf("\n v %d: ", src); 
+    //printf("\n v %d: ", src);
     for (i=1; i <= ecount[src]; i++) {
-      printf("%d \t", neighbor[ex++]);
+      //printf("%d \t", neighbor[ex++]);
     }
   }
   printf("\n"); 
@@ -201,8 +201,8 @@ void randomcolor() {
     }
 
 #ifdef DEBUG
-    printf("\npermutation: ");
-    for (x=1; x <= numnodes; x++) printf("%d\t", perm[x]); 
+    //printf("\npermutation: ");
+    for (x=1; x <= numnodes; x++); //printf("%d\t", perm[x]);
     printf("\n");
 #endif
 
@@ -219,7 +219,7 @@ void randomcolor() {
 	if (checkcolorok(pv, k)) {
 	  colorit(pv, k);
 #ifdef DEBUG
-	  printf("(%d %d)\t", pv, k);
+	  //printf("(%d %d)\t", pv, k);
 #endif
 	  if (k > maxcolor) maxcolor=k;  
 	  break;
@@ -229,8 +229,8 @@ void randomcolor() {
 
 #ifdef REPORTSTATS
     printf("\n iteration %d  maxcolor %d \n", it, maxcolor); 
-    printf("vertex color pairs:\n");
-    for (x = 1; x <=numnodes; x++) printf("%d %d \t", x, colorof[x]); 
+    //printf("vertex color pairs:\n");
+    for (x = 1; x <=numnodes; x++); //printf("%d %d \t", x, colorof[x]);
 #endif
 
     if (bestcolor > maxcolor) {/* save best */ 
@@ -247,7 +247,6 @@ int argc;
 char *argv[];
 
 {
-  clock_t begin = clock();
   if ((argc != 3) && (argc != 4))  {
     printf("usage: random filename i s  (or)\n");
     printf("       random filename i \n"); 
@@ -268,7 +267,8 @@ char *argv[];
   else 
     srand48((long) atoi(argv[3])); 
 
-  getgraph(); 
+  getgraph();
+  clock_t begin = clock();
   randomcolor(); 
       
 #ifdef REPORTCOLORS
@@ -287,7 +287,7 @@ char *argv[];
   int i;
   printf("color counts:\n"); /* of best coloring only*/ 
   for (i=1; i <= numnodes; i++) {
-    printf("%d %d \t", i, colordist[i]);
+    //printf("%d %d \t", i, colordist[i]);
     if (i % 10 == 0) printf("\n");
     if (colordist[i]==0) break;
   }

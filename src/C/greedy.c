@@ -131,7 +131,7 @@ void printcolors()
 {
   int v; 
   for (v =1; v<= numnodes; v++) {
-    printf("%d %d\t", v, colorof[v]); 
+    //printf("%d %d\t", v, colorof[v]);
     if (v % 10 == 0) printf("\n"); 
   }
 }
@@ -146,9 +146,9 @@ void printgraph()
  
   for (src = 1; src <= numnodes; src++) {
     ex = edgex[src];
-    printf("\n v %d: ", src); 
+    //printf("\n v %d: ", src);
     for (i=1; i <= ecount[src]; i++) {
-      printf("%d \t", neighbor[ex++]);
+      //printf("%d \t", neighbor[ex++]);
     }
   }
   printf("\n"); 
@@ -160,7 +160,7 @@ int argc;
 char *argv[];
 
 {	
-	 clock_t begin = clock();
+
      if (argc != 2) {
          printf("usage: color filename\n");
          exit(1);
@@ -171,6 +171,7 @@ char *argv[];
 		  } else {
 
 		    getgraph();
+		    clock_t begin = clock();
 		    colorgraph();
 #ifdef REPORTCOLORS
                     printf("vertex color pairs:\n"); 
@@ -188,15 +189,15 @@ char *argv[];
 		    int i;
                     printf("color counts:\n"); 
 		    for (i=1; i <= numnodes; i++) {
-		      printf("%d %d \t", i, colorcounts[i]);
+		      //printf("%d %d \t", i, colorcounts[i]);
 		      if (i % 10 == 0) printf("\n");
 		      if (colorcounts[i]==0) break;
 		    }
-		    		    
+            clock_t end = clock();
+            double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+            printf("\nTime spent %f\n", time_spent);
+
 #endif
 		  }  /* end else */ 
 	} /* end else */ 
-  clock_t end = clock();
-  double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-  printf("\nTime spent %f\n", time_spent);
-} /* end main */ 
+} /* end main */

@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h> 
 
 #define TRUE 1
 #define FALSE 0
 #define MAXNODES  100
 #define MAXCOLORS 100    
-#define MAXEDGES 100*(100-1)/2  
+#define MAXEDGES 100*(100-1)/2
 
 /* SIG Simplified Iterated Greedy graph coloring algorithm C.C. McGeoch 2011
    Usage: sig <filename 
@@ -14,12 +15,13 @@
    filename:   input file containing algorithm parameters. See
           getinput.c for details. 
 */ 
-
+#define CCMAX 6
+#define VCMAX 4
 #define REPORTSTATS  1
 #define REPORTCOLORS 1
 #define DEBUG 1
 #define ASSERT(cond, msg) if (! (cond)) {printf("msg \n"); exit(1);} ;
-
+#define DEB 1
 #include "getinput.c" 
 
 int numnodes=0;    /* number of nodes in the graph */
@@ -62,20 +64,20 @@ void printcolors(int which)
   int v; 
 
   if (which==0) {// print best 
-    printf("best coloring:\t"); 
+    //printf("best coloring:\t");
     for (v =1; v<= numnodes; v++) {
-      printf("%d %d\t", v, bestcoloring[v]); 
-      if (v % 10 == 0) printf("\n"); 
+      //printf("%d %d\t", v, bestcoloring[v]);
+      if (v % 10 == 0); // printf("\n");
     }
-    printf("\n best  %d  %d \n", bestcolors, bestcolorscore); 
+    //printf("\n best  %d  %d \n", bestcolors, bestcolorscore);
   }
   else { // print current 
-    printf("current coloring:\t"); 
+    //printf("current coloring:\t");
     for (v =1; v<= numnodes; v++) {
-      printf("%d %d\t", v, colorof[v]); 
-      if (v % 10 == 0) printf("\n"); 
+      //printf("%d %d\t", v, colorof[v]);
+      if (v % 10 == 0); // printf("\n");
     }
-    printf("\n curcolors,score  %d  %d \n", curcolors, curcolorscore); 
+    printf("\n curcolors,score  %d  %d \n", curcolors, curcolorscore);
   }
 }
 /*---printgraph----------------------------------------------*/ 
@@ -87,12 +89,12 @@ void printgraph()
  
   for (src = 1; src <= numnodes; src++) {
     ex = edgex[src];
-    printf("\n v %d: ", src); 
+    //printf("\n v %d: ", src);
     for (i=1; i <= ecount[src]; i++) {
-      printf("%d \t", neighbor[ex++]);
+      //printf("%d \t", neighbor[ex++]);
     }
   }
-  printf("\n"); 
+  //printf("\n");
 }
 /*--------------------------------------------------------------*/ 
 /* getgraph: Read input file and build graph.                   */ 
@@ -169,12 +171,12 @@ void greedycolorgraph()
   curcolorscore=0; 
 
 #ifdef DEBUG
-  printf("\nbefore greedy color: ");
+  //printf("\nbefore greedy color: ");
   printcolors(1); 
-  printf("\n vperm is: \t");
-  for (v = 1; v <= numnodes; v++) printf("%d \t", vperm[v]);
-  printf("\n cperm is: \t");
-  for (c = 1; c <= numcolors; c++) printf("%d \t", cperm[c]);
+  //printf("\n vperm is: \t");
+  for (v = 1; v <= numnodes; v++); // printf("%d \t", vperm[v]);
+  //printf("\n cperm is: \t");
+  for (c = 1; c <= numcolors; c++); // printf("%d \t", cperm[c]);
 #endif 
 
   for (v = 1; v <= numnodes; v++) { // for each vertex 
@@ -196,9 +198,9 @@ void greedycolorgraph()
   if (curcolors < numcolors) numcolors = curcolors;  // reduce size of color set 
 
 #ifdef DEBUG
-  printf("\nafter greedy color:  ");
+  //printf("\nafter greedy color:  ");
   printcolors(1);
-  printf("curcolors %d curcolorscore %d  numcolors %d\n", curcolors, curcolorscore, numcolors);
+  //printf("curcolors %d curcolorscore %d  numcolors %d\n", curcolors, curcolorscore, numcolors);
 #endif 
 
 } // greedycolorgraph 
@@ -228,18 +230,27 @@ void revertToBest() {
 
 /*--pickRandomColorRule------------------------------------------------*/
 int pickRandomColorRule() {
-  
-  double  pr = drand48(); 
-  int i;  
-  for (i=0; pr > ccutoffs[i] ; i++); 
-  return i; 
+
+  double  pr = drand48();
+  int i;
+  for (i=0; i< CCMAX && pr > ccutoffs[i]; i++);
+
+  if (i >= CCMAX)
+    return CCMAX-1;
+  else
+    return i;
 }
 /*--pickRandomVertexRule-----------------------------------------------*/ 
 int pickRandomVertexRule() {
+
   double pr = drand48();
   int i;
-  for (i=0; pr > vcutoffs[i]; i++);
-  return i; 
+  for (i=0; i<VCMAX && pr > vcutoffs[i]; i++);
+
+  if (i >= VCMAX)
+    return VCMAX-1;
+  else
+    return i;
 } 
 
 /*---vertexreorder--------------------------------------*/ 
@@ -384,9 +395,9 @@ result is array cperm[1..numcolors] (just the front): cperm[i] names the ith col
   case 4: printf("k..1\n"); break; 
   case 5: printf("reverse current\n"); break; 
   }
-  printf("use these colors: "); 
-  for(c =1; c <= numcolors; c++) printf(" %d\t" , cperm[c]); 
-  printf("\n"); 
+  //printf("use these colors: ");
+  for(c =1; c <= numcolors; c++); // printf(" %d\t" , cperm[c]);
+  //printf("\n");
 #endif 
 
   switch (cr) {
@@ -525,11 +536,11 @@ void sigcolor() {
   while ((b < maxiter) && (bestcolors > target)) {
     t++;  b++;  r++;  
 
-    // cr = pickRandomColorRule();
+    //cr = pickRandomColorRule();
     //vr = pickRandomVertexRule();
 
-    vr = (vr+1) % 4; 
-    cr = (cr+1) % 6;  
+    vr = (vr+1) % 4;
+    cr = (cr+1) % 6;
 
 #ifdef DEBUG
     printf("\niteration %d color rule %d vertex rule %d\n", t, cr, vr); 
@@ -560,7 +571,7 @@ void sigcolor() {
 /*--main---------------------------------------------------------*/ 
 int  main(int argc, char* argv[])
 {
-
+  
   transinput();  // command file/parameters from standard in 
   getgraph();    // input graph  (from file named in command file) 
 
@@ -570,14 +581,14 @@ int  main(int argc, char* argv[])
 #endif 
 
     int i;  
-
+	clock_t begin = clock();
     for (i = 0; i < trials; i++) { 
       checkcount=0;
       bestcolors=0;
       bestcolorscore=0; 
       
       // what else to initialize: maxcolor=0; colorcount=0; checkcou
-    
+	   	
       sigcolor() ; 
 
 #ifdef REPORTSTATS 
@@ -593,6 +604,9 @@ int  main(int argc, char* argv[])
 #endif 
     }//for trials 
 
+	clock_t end = clock();
+	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+	printf("\nTime spent %f\n", time_spent);
     return(0); 
 } /* end main */ 
 
