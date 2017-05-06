@@ -229,27 +229,29 @@ void revertToBest() {
 }
 
 /*--pickRandomColorRule------------------------------------------------*/
-int pickRandomColorRule() {
+int pickRandomColorRule(int cr) {
 
   double  pr = drand48();
   int i;
-  for (i=0; i< CCMAX && pr > ccutoffs[i]; i++);
+  for (i=0; i< cr+1 && pr > ccutoffs[i]; i++);
+  	i%=6;
 
-  if (i >= CCMAX)
-    return CCMAX-1;
-  else
+  // if (i >= CCMAX)
+  //   return CCMAX-1;
+  // else
     return i;
 }
 /*--pickRandomVertexRule-----------------------------------------------*/ 
-int pickRandomVertexRule() {
+int pickRandomVertexRule(int vr) {
 
   double pr = drand48();
   int i;
-  for (i=0; i<VCMAX && pr > vcutoffs[i]; i++);
+  for (i=0; i<vr+1 && pr > vcutoffs[i]; i++);
 
-  if (i >= VCMAX)
-    return VCMAX-1;
-  else
+  	i%=4;
+  // if (i >= VCMAX)
+  //   return VCMAX-1;
+  // else
     return i;
 } 
 
@@ -536,11 +538,14 @@ void sigcolor() {
   while ((b < maxiter) && (bestcolors > target)) {
     t++;  b++;  r++;  
 
-    //cr = pickRandomColorRule();
-    //vr = pickRandomVertexRule();
+    cr = pickRandomColorRule(cr);
+    vr = pickRandomVertexRule(vr);
 
-    vr = (vr+1) % 4;
-    cr = (cr+1) % 6;
+    printf("******************************HULALA************************************: %d %d\n",vr, cr);
+
+    //cr = (cr+1) % 6;
+    //vr = (vr+1) % 4;
+    
 
 #ifdef DEBUG
     printf("\niteration %d color rule %d vertex rule %d\n", t, cr, vr); 
